@@ -1,15 +1,15 @@
 function insert(item, user, request) {
-    var ps = new mssql.PreparedStatement();
+    var sql = request.service.mssql;
+    var ps = new sql.PreparedStatement();
 
-    ps.input('message', mssql.NVarChar(mssql.MAX));
-    ps.input('picture', mssql.NVarChar(mssql.MAX));
-    ps.input('latitute', mssql.NVarChar(mssql.MAX));
-    ps.input('longitude', mssql.NVarChar(mssql.MAX));
-    ps.input('owner', mssql.NVarChar(mssql.MAX));
+    ps.input('message', sql.NVarChar(sql.MAX));
+    ps.input('picture', sql.NVarChar(sql.MAX));
+    ps.input('latitute', sql.NVarChar(sql.MAX));
+    ps.input('longitude', sql.NVarChar(sql.MAX));
+    ps.input('owner', sql.NVarChar(sql.MAX));
 
     ps.prepare("INSERT INTO drops (message, picture, location, owner) VALUES (@message, @picture, geography::STPointFromText('POINT(' + @latitute + ' ' + @longitude + ')', 4326), @owner)", function(err) {
         // ... error checks
-        console.log("Prepare OK");
 
         ps.execute({
                 message: item.message,
@@ -19,8 +19,6 @@ function insert(item, user, request) {
                 owner: item.owner
             }, function(error, results) {
                 // ... error checks
-                
-                console.log("Execute OK");
 
                 if (error) {
                     console.log("Error in getgamesforuser : " + error)
