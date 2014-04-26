@@ -11,9 +11,9 @@ function insert(item, user, request) {
             },
 
             error: function (error) {
-                console.log("Error in getgamesforuser : " + error)
+                console.log("Error inserting drop: " + error)
 
-                request.respond(500, "Error in getgamesforuser: " + err);
+                request.respond(500, "Error inserting drop: " + error);
 
                 return;
             }
