@@ -1,7 +1,7 @@
 function insert(item, user, request) {
-    var queryString = "INSERT INTO drops (message, picture, location, owner) VALUES (?, ?, geography::STPointFromText('POINT(' + ? + ' ' + ? + ')', 4326), ?)";
+    var queryString = "INSERT INTO drops (message, picture, location, owner) VALUES (" + item.message + ", " + item.picture + ", geography::STPointFromText('POINT(' + " + item.longitude.toString() + " + ' ' + " + item.latitude.toString() + " + ')', 4326), " + user.userId + ")";
     
-    mssql.query(queryString, [item.message, item.picture, item.longitude.toString(), item.latitude.toString(), user.userId], {
+    mssql.query(queryString, {
         success: function (results) {
             request.respond(200, results);
 
