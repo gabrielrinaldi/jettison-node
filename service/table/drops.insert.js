@@ -1,5 +1,4 @@
 function insert(item, user, request) {
-    var sql = mssql;
     var ps = new sql.PreparedStatement();
 
     ps.input('message', sql.NVarChar(sql.MAX));
