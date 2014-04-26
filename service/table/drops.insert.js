@@ -1,6 +1,22 @@
 function insert(item, user, request) {
-    console.log("About to insert:", item);
+    var queryString = "INSERT INTO drops (message, picture, location, owner) VALUES (?, ?, geography::STPointFromText('POINT(' + ? + ' ' + ? + ')', 4326), ?)";
     
-    item.owner = user.userId;
-    request.execute();
+    request.service.mssql.query(queryString, 
+        [item.message, item.picture, item.longitude.toString(), item.latitude.toString(), user.userId], 
+        {
+            success: function (results) {
+                request.respond(200, results);
+
+                return;
+            },
+
+            error: function (error) {
+                console.log("Error in getgamesforuser : " + error)
+
+                request.respond(500, "Error in getgamesforuser: " + err);
+
+                return;
+            }
+        }
+    );
 }
