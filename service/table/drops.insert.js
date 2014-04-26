@@ -1,7 +1,7 @@
 function insert(item, user, request) {
     var queryString =   "INSERT INTO drops (message, picture, location, owner) " +
                         "VALUES ('" + item.message + "', " +
-                        "'" + item.picture "', " +
+                        "'" + item.picture + "', " +
                         "geography::STPointFromText('POINT('" + item.latitute.toString() + "' '" + item.longitude.toString() + "')', 4326), " +
                         "'" + user.userId + "');"
 
