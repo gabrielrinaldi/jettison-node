@@ -1,35 +1,23 @@
 function insert(item, user, request) {
-    console.log("SQL: %j", mssql);
-    
-    var ps = new sql.PreparedStatement();
+    var queryString =   "INSERT INTO drops (message, picture, location, owner) " +
+                        "VALUES ('" + item.message + "', " +
+                        "'" + item.picture "', " +
+                        "geography::STPointFromText('POINT('" + item.latitute.toString() + "' '" + item.longitude.toString() + "')', 4326), " +
+                        "'" + user.userId + "');"
 
-    ps.input('message', sql.NVarChar(sql.MAX));
-    ps.input('picture', sql.NVarChar(sql.MAX));
-    ps.input('latitute', sql.NVarChar(sql.MAX));
-    ps.input('longitude', sql.NVarChar(sql.MAX));
-    ps.input('owner', sql.NVarChar(sql.MAX));
+    mssql.query(queryString, {
+        success: function (results) {
+            request.respond(200, results);
 
-    ps.prepare("INSERT INTO drops (message, picture, location, owner) VALUES (@message, @picture, geography::STPointFromText('POINT(' + @latitute + ' ' + @longitude + ')', 4326), @owner)", function(err) {
-        // ... error checks
+            return;
+        },
 
-        ps.execute({
-                message: item.message,
-                picture: item.picture,
-                latitute: item.latitute.toString(),
-                longitude: item.longitude.toString(),
-                owner: item.owner
-            }, function(error, results) {
-                // ... error checks
+        error: function (err) {
+            console.log("Error in getgamesforuser : " + err)
 
-                if (error) {
-                    console.log("Error in getgamesforuser : " + error)
+            request.respond(500, "Error in getgamesforuser: " + err);
 
-                    request.respond(500, "Error in inserting drop: " + error);
-                } else {
-                    console.log(results[0].value);
-
-                    request.respond(200, results);
-                }
-        });
+            return;
+        }
     });
 }
