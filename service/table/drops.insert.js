@@ -1,19 +1,33 @@
 function insert(item, user, request) {
-    var queryString = "INSERT INTO drops (message, picture, location, owner) VALUES (" + item.message + ", " + item.picture + ", geography::STPointFromText('POINT(' + " + item.longitude.toString() + " + ' ' + " + item.latitude.toString() + " + ')', 4326), " + user.userId + ")";
-    
-    mssql.query(queryString, {
-        success: function (results) {
-            request.respond(200, results);
+    var ps = new mssql.PreparedStatement();
 
-            return;
-        },
+    ps.input('message', mssql.NVarChar(mssql.MAX));
+    ps.input('picture', mssql.NVarChar(mssql.MAX));
+    ps.input('latitute', mssql.NVarChar(mssql.MAX));
+    ps.input('longitude', mssql.NVarChar(mssql.MAX));
+    ps.input('owner', mssql.NVarChar(mssql.MAX));
 
-        error: function (error) {
-            console.log("Error inserting drop: " + error)
+    ps.prepare("INSERT INTO drops (message, picture, location, owner) VALUES (@message, @picture, geography::STPointFromText('POINT(' + @latitute + ' ' + @longitude + ')', 4326), @owner)", function(err) {
+        // ... error checks
 
-            request.respond(500, "Error inserting drop: " + error);
+        ps.execute({
+                message: item.message,
+                picture: item.picture,
+                latitute: item.latitute.toString(),
+                longitude: item.longitude.toString(),
+                owner: item.owner
+            }, function(error, results) {
+                // ... error checks
 
-            return;
-        }
+                if (error) {
+                    console.log("Error in getgamesforuser : " + error)
+
+                    request.respond(500, "Error in inserting drop: " + error);
+                } else {
+                    console.log(results[0].value);
+
+                    request.respond(200, results);
+                }
+        });
     });
 }
