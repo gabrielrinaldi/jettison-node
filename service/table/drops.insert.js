@@ -9,6 +9,7 @@ function insert(item, user, request) {
 
     ps.prepare("INSERT INTO drops (message, picture, location, owner) VALUES (@message, @picture, geography::STPointFromText('POINT(' + @latitute + ' ' + @longitude + ')', 4326), @owner)", function(err) {
         // ... error checks
+        console.log("Prepare OK");
 
         ps.execute({
                 message: item.message,
@@ -18,6 +19,8 @@ function insert(item, user, request) {
                 owner: item.owner
             }, function(error, results) {
                 // ... error checks
+                
+                console.log("Execute OK");
 
                 if (error) {
                     console.log("Error in getgamesforuser : " + error)
