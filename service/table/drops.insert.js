@@ -1,5 +1,5 @@
 function insert(item, user, request) {
-    console.log("SQL: " + mssql);
+    console.log("SQL: %j", mssql);
     
     var ps = new sql.PreparedStatement();
 
