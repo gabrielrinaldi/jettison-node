@@ -1,11 +1,9 @@
-exports.post = function(request, response) {
-    // Use "request.service" to access features of your mobile service, e.g.:
-    //   var tables = request.service.tables;
-    //   var push = request.service.push;
-
-    response.send(statusCodes.OK, { message : 'Hello World!' });
-};
-
 exports.get = function(request, response) {
-    response.send(statusCodes.OK, { message : 'Hello World!' });
+    var queryString = "SELECT id, message, location.Lat latitude, location.Long longitude FROM drops WHERE location.STDistance(geography::STPointFromText('POINT(' + ? + ' ' + ? + ')', 4326)) <= ?"
+    
+    request.service.mssql.query(queryString, [request.query.longitude.toString(), request.query.latitude.toString(), 100], { 
+          success: function(results) { 
+                 request.respond(statusCodes.OK, results); 
+          } 
+     });
 };
